@@ -34,7 +34,7 @@ ember generate route scientists
 ```
 
 Output:
-```
+```bash
   create app\routes\scientists.js
   create app\templates\scientists.hbs
 updating router
@@ -55,6 +55,8 @@ We will now render some data.
 We do this by *specifying a model* for that route by editing `app/routes/scientists.js`.
 
 ```javascript
+// scientists.js
+
 import Route from "@ember/routing/route";
 
 export default Route.extend({
@@ -71,6 +73,8 @@ If you need to fetch data synchronously, the `model()` method supports any libra
 
 We will now tell Ember to turn that array of strings into HTML:
 ```javascript
+// scientists.hbs
+
 <h2>List of Scientists</h2>
 
 <ul>
@@ -80,13 +84,48 @@ We will now tell Ember to turn that array of strings into HTML:
 </ul>
 ```
 
-- The `each` helper loops over each item in the array we provided from the `model()` hook.
-- We then print it inside an `<li>` element.
+The `each` helper loops over each item in the array we provided from the `model()` hook.
+We then print it inside an `<li>` element.
 
-# Create a UI Component
+# Creating a UI Component
 Ember makes it easy to refactor your templates into reusable components.
 
 We will create a `people-list` component that we can use in multiple places to show a list of people.
+
+Use the generator `component` to create a new component:
+```
+ember generate component people-list
+```
+
+We copy and paste the `scientists` template into the `people-list` component's template and edit it to look as follows:
+
+```javascript
+// people-list.hbs
+
+<h2>{{this.title}}</h2>>
+
+<ul>
+  {{#each this.people as |person|}}
+  <li>{{person}}</li>
+  {{/each}}
+</ul>
+```
+
+- We have changed the title from a hard-coded string of "List of Scientists" to a dynamic property `{{title}}`.
+- We have also renamed `scientist` to a more generic `person`, decreasing the coupling of our component to where it's used.
+
+Revisit the `scientists` template and replace the old code to the new version that uses the `person` component:
+
+```javascript
+// scientists.hbs
+
+<PeopleList @title="List of Scientists" @people={{this.model}} />
+```
+
+- We have now removed most of the code.
+- We use the `title` and `people` attributes to pass the data through from the Scientist template to the people-list component.
+
+The UI should now look identical. The only difference now is that we've componentized our lit into a version that's more reusable and more maintainable.
 
 # Uninstalling Ember add-ons
 To uninstall add-ons installed with `ember install "packageName"` type:
@@ -94,6 +133,11 @@ To uninstall add-ons installed with `ember install "packageName"` type:
 npm uninstall "packageName"
 ```
 
+# Removing generated objects
+To remove objects generated with `ember generate` type:
+```
+ember destroy <type> <name>
+```
 
 # Sources
 - [Ember Guide](https://guides.emberjs.com)
