@@ -127,6 +127,42 @@ Revisit the `scientists` template and replace the old code to the new version th
 
 The UI should now look identical. The only difference now is that we've componentized our lit into a version that's more reusable and more maintainable.
 
+# Click Events
+Ember makes it easy to add functionality for users to interact with elements.
+We can use built-in helpers such as `action` to achieve this:
+
+```javascript
+// people-list.hbs
+
+<h2>{{this.title}}</h2>
+
+<ul>
+  {{#each this.people as |person|}}
+  <li {{action "showPerson" person}}>{{person}}</li>
+  {{/each}}
+</ul>
+```
+
+- The `action` helper allows you to add event listeners to elements and call named functions.
+- By default, a `click` event listener is added when the `action` helper is used, but it can be used to listen for any element event.
+- When the `li` element is clicked, a `showPerson` function will be called from the `actions` object in the `people-list` component.
+
+To handle the `showPerson` function, we will need to modify the `people-list` component file to add the function to be called:
+
+```javascript
+// people-list.js
+
+import Component from "@ember/component";
+
+export default Component.extend({
+  actions: {
+    showPerson(person) {
+      alert(person);
+    }
+  }
+});
+```
+
 # Uninstalling Ember add-ons
 To uninstall add-ons installed with `ember install "packageName"` type:
 ```
